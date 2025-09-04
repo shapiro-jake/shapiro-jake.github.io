@@ -16,85 +16,170 @@ title: My Reading
         authors chose their favorite story to include. I particularly liked Capote's "Children on Their Birthdays" and Yates' "A Really Good Jazz Piano."
     </p>
     <p>
-        Next, I look forward to reading <i>A Yiddish Policemen's Union</i> by Michael Chabon.
+        Below are some of my favorite books and quotes from them.
     </p>
 
-  <link rel="stylesheet" href="books.css">
+<link rel="stylesheet" href="books.css">
+<section id="grid" class="grid" aria-label="Books gallery"></section>
 
-  <section id="grid" class="grid" aria-label="Books gallery"></section>
-
-  <template id="card-template">
-    <button class="card" type="button" aria-expanded="false">
-      <div class="card-inner">
-        <div class="face front">
-          <img alt="" loading="lazy" decoding="async" />
+    <template id="card-template">
+        <button class="card" type="button" aria-expanded="false">
+        <div class="card-inner">
+            <div class="face front">
+            <img alt="" loading="lazy" decoding="async" />
+            </div>
+            <div class="face back">
+            <div class="quote"></div>
+            <div class="meta"><span class="title"></span><span class="dot" aria-hidden="true"></span><span class="author"></span></div>
+            </div>
         </div>
-        <div class="face back">
-          <div class="quote"></div>
-          <div class="meta"><span class="title"></span><span class="dot" aria-hidden="true"></span><span class="author"></span></div>
-        </div>
-      </div>
-    </button>
-  </template>
+        </button>
+    </template>
+    <script>
+        function fitQuoteIfNeeded(card, { maxPx = 20, minPx = 8 } = {}) {
+            const back  = card.querySelector('.face.back');
+            const quote = card.querySelector('.quote');
+            const meta  = card.querySelector('.meta');
+            if (!back || !quote || !meta) return;
 
-  <script>
+            // Ensure we start from the max (12px) and no stale constraints
+            quote.style.fontSize = maxPx + 'px';
+            quote.style.maxHeight = '';
+
+            // Compute available space for the quote
+            const cs = getComputedStyle(back);
+            const padY = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+            const available = back.clientHeight - padY - meta.offsetHeight - 6; // small buffer
+            if (available <= 0) return;
+
+            // If it already fits at 12px, do nothing
+            // (we leave the inline 12px — it's the global cap anyway)
+            if (quote.scrollHeight <= available) return;
+
+            // Otherwise, binary search the largest size that fits
+            let low = minPx, high = maxPx, best = minPx;
+            while (low <= high) {
+            const mid = Math.floor((low + high) / 2);
+            quote.style.fontSize = mid + 'px';
+            // force reflow for reliable measurement
+            void quote.offsetHeight;
+
+            if (quote.scrollHeight <= available) {
+                best = mid;
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+            }
+            quote.style.fontSize = best + 'px'; // shrink only this card
+        }
+
+        // Helper to run after layout/fonts are ready
+        function fitAfterLayout(card) {
+            const run = () => fitQuoteIfNeeded(card);
+            if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(run);
+            } else {
+            requestAnimationFrame(run);
+            }
+        }
+</script>
+
+<script>
     const books = [
-      {
-        title: 'Elon Musk',
-        author: 'Walter Isaacson',
-        cover: 'https://m.media-amazon.com/images/I/81Kaj5++6pL._SY522_.jpg',
-        quote: 'The algorithm!'
-      },
-      {
-        title: 'The Amazing Adventure of Cavalier and Clay',
-        author: 'Michael Chabon',
-        cover: 'https://m.media-amazon.com/images/I/81F8gLk8L6L._UF1000,1000_QL80_.jpg',
-        quote: 'Golem!'
-      },
-      {
-        title: 'Ulysses',
-        author: 'James Joyce',
-        cover: 'https://m.media-amazon.com/images/I/61yRWyQkxKL._UF1000,1000_QL80_.jpg',
-        quote: 'Stephen!'
-      },
-    ];
+  {
+    title: 'Elon Musk',
+    author: 'Walter Isaacson',
+    cover: 'https://m.media-amazon.com/images/I/81Kaj5++6pL._SY522_.jpg',
+    quote: '‘How can someone say they are passionate about fighting climate change and then do something that reduced the overall investment in the company doing the most?’'
+  },
+  {
+    title: 'The Amazing Adventures of Cavalier and Clay',
+    author: 'Michael Chabon',
+    cover: 'https://m.media-amazon.com/images/I/81F8gLk8L6L._UF1000,1000_QL80_.jpg',
+    quote: 'In 1938, Superman appeared. He had been mailed to the offices of National Periodical Publications from Cleveland, by a couple of Jewish boys who had imbued him with the powers of a hundred men, of a distant world, and of the full measure of their bespectacled adolescent hopefulness and desperation.'
+  },
+  {
+    title: 'Ulysses',
+    author: 'James Joyce',
+    cover: 'https://m.media-amazon.com/images/I/61yRWyQkxKL._UF1000,1000_QL80_.jpg',
+    quote: 'Throwaway.'
+  },
+        {
+    title: 'Skunkworks',
+    author: 'Ben Rich',
+    cover: 'https://m.media-amazon.com/images/I/81nzweM-6sL._UF1000,1000_QL80_.jpg',
+    quote: 'About an hour after the first phone call, Keith phoned again Problem solved. The heads of three screws were not quite tight and extended above the surface by less than an eighth of an inch. On radar they appeared as big as a barn door!'
+  },
+  {
+    title: 'Red Notice',
+    author: 'Bill Browder',
+    cover: 'https://m.media-amazon.com/images/I/81F8gLk8L6L._UF1000,1000_QL80_.jpg',
+    quote: 'Seventy years of communism had destroyed the work ethic of an entire nation. Millions of Russians had been sent to the gulags for showing the slightest hint of personal initiative. The Soviets severely penalized independent thinkers, so the natural self-preservation reaction was to do as little as possible and hope that nobody would notice you.'
+  },
+  {
+    title: 'Perks of Being a Wallflower',
+    author: 'Stephen Chobsky',
+    cover: 'https://upload.wikimedia.org/wikipedia/en/0/0b/The_Perks_of_Being_a_Wallflower_Poster.jpg',
+    quote: '‘I feel infinite.’'
+  },
+        {
+    title: 'March',
+    author: 'Geraldine Brooks',
+    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1327935441i/13529.jpg',
+    quote: 'Then, moving to a spot about six feet from where Grace lay, he made a swift, running skip, raising the lash and bringing it down with a crack. The stroke peeled away a narrow strip of skin, which lifted on the whip, dangled for a moment, and then fell to the leaf-littered floor. A bright band of blood sprang up in its place. Her whole body quivered.'
+  },
+  {
+    title: 'Scar Tissue',
+    author: 'Anthony Kiedis',
+    cover: 'https://m.media-amazon.com/images/I/71L8tIaBP+L._UF1000,1000_QL80_.jpg',
+    quote: 'Industrial-strength salad dressing.'
+  },
+  {
+    title: 'Creativity Inc.',
+    author: 'Ed Catmull',
+    cover: 'https://m.media-amazon.com/images/I/41phtyJ09KL._SY445_SX342_ControlCacheEqualizer_.jpg',
+    quote: 'Craft is what we are expected to know; art is the unexpected use of our craft.'
+  },
+];
 
     const grid = document.getElementById('grid');
     const tpl = document.getElementById('card-template');
 
     books.forEach(b => {
-      const node = tpl.content.cloneNode(true);
-      const card = node.querySelector('.card');
-      const img = node.querySelector('img');
-      const q = node.querySelector('.quote');
-      const t = node.querySelector('.title');
-      const a = node.querySelector('.author');
+        const node = tpl.content.cloneNode(true);
+        const card = node.querySelector('.card');
+        const img = node.querySelector('img');
+        const q = node.querySelector('.quote');
+        const t = node.querySelector('.title');
+        const a = node.querySelector('.author');
 
-      img.src = b.cover;
-      img.alt = `${b.title} book cover`;
-      q.innerHTML = `“${b.quote}”`;
-      t.textContent = b.title;
-      a.textContent = b.author;
-      card.setAttribute('aria-label', `Show quote from ${b.title}`);
+        img.src = b.cover;
+        img.alt = `${b.title} book cover`;
+        q.innerHTML = `“${b.quote}”`;
+        t.textContent = b.title;
+        a.textContent = b.author;
+        card.setAttribute('aria-label', `Show quote from ${b.title}`);
 
-      card.addEventListener('click', () => toggle(card));
+        card.addEventListener('click', () => toggle(card));
 
-      grid.appendChild(node);
+        grid.appendChild(node);
+        requestAnimationFrame(() => fitAfterLayout(card)); // <-- add this line
     });
 
     function toggle(card){
-      const flipped = card.classList.toggle('is-flipped');
-      card.setAttribute('aria-expanded', flipped);
+    const flipped = card.classList.toggle('is-flipped');
+    card.setAttribute('aria-expanded', flipped);
     }
 
     // Ensure only one card flips at a time
     document.addEventListener('click', (e) => {
-      const btn = e.target.closest('.card');
-      document.querySelectorAll('.card.is-flipped').forEach(c => {
+    const btn = e.target.closest('.card');
+    document.querySelectorAll('.card.is-flipped').forEach(c => {
         if(c !== btn){ 
-          c.classList.remove('is-flipped');
-          c.setAttribute('aria-expanded', 'false');
+        c.classList.remove('is-flipped');
+        c.setAttribute('aria-expanded', 'false');
         }
-      });
+    });
     }, {capture:true});
-  </script>
+</script>
