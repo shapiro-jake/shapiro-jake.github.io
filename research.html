@@ -2,6 +2,8 @@
 layout: default
 title: My Research
 ---
+    <script src="https://unpkg.com/3dmol/build/3Dmol-min.js"></script>
+
     <h1>My Research</h1>
 
     <h2>Chen Lab</h2>
@@ -56,11 +58,32 @@ title: My Research
     </p>
     <p>
       As I took more biology classes, I became more interested in molecular biology.
-      We came up with the idea of using gene editing to install a mutation in the cell surface protein CD59 to reduce rates of cardiovascular disease in diabetes patients.
+      We came up with the idea of using gene editing to install a mutation in the cell surface protein CD59 to reduce rates of cardiovascular disease in diabetes patients. Below is an (interactive) model of the CD59 protein I was trying to engineer.
       Unfortunately, we could not install the mutation in cells, but I learned many fundamental biology techniques, and more importantly, how to formulate questions and design experiments to answer them.
       I also became interest in protein engineering and design, which led me to the Baker Lab in the Summer of 2022.
     </p>
       
+    <div id="pdb-viewer" style="width:100%; height:200px; position:relative;"></div>
+
+    <script>
+      // 3) Create the viewer
+      const element = document.getElementById('pdb-viewer');
+      const config = { backgroundColor: 'white' };
+      const viewer = $3Dmol.createViewer(element, config);
+
+      // 4) Load a structure by PDB ID from RCSB (or use a file in your repo)
+      const pdbUrl = 'https://files.rcsb.org/download/2J8B.pdb'; // swap 1CRN for yours
+      viewer.addModelFromUrl(pdbUrl, 'pdb', function() {
+        // 5) Style & render
+        viewer.setStyle({}, { cartoon: { color: 'spectrum' } });
+        viewer.zoomTo();
+        viewer.render();
+      });
+
+      // 6) Keep it responsive
+      window.addEventListener('resize', () => viewer.resize());
+    </script>
+    
     <figure>
       <img src="images/research/binders.jpg" alt="My binder designs" width="600">
       <figcaption>The minibinders I designed against FGFR (blue)</figcaption>
