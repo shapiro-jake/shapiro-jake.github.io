@@ -18,3 +18,85 @@ title: My Reading
     <p>
         Next, I look forward to reading <i>A Yiddish Policemen's Union</i> by Michael Chabon.
     </p>
+
+    <!doctype html>
+
+  <link rel="'stylesheet" href="books.css">
+
+  <section id="grid" class="grid" aria-label="Books gallery"></section>
+
+  <template id="card-template">
+    <button class="card" type="button" aria-expanded="false">
+      <div class="card-inner">
+        <div class="face front">
+          <img alt="" loading="lazy" decoding="async" />
+        </div>
+        <div class="face back">
+          <div class="quote"></div>
+          <div class="meta"><span class="title"></span><span class="dot" aria-hidden="true"></span><span class="author"></span></div>
+        </div>
+      </div>
+    </button>
+  </template>
+
+  <script>
+    const books = [
+      {
+        title: 'Elon Musk',
+        author: 'Walter Isaacson',
+        cover: 'https://m.media-amazon.com/images/I/81Kaj5++6pL._SY522_.jpg',
+        quote: 'The algorithm!'
+      },
+      {
+        title: 'The Amazing Adventure of Cavalier and Clay',
+        author: 'Michael Chabon',
+        cover: 'https://m.media-amazon.com/images/I/81F8gLk8L6L._UF1000,1000_QL80_.jpg',
+        quote: 'Golem!'
+      },
+      {
+        title: 'Ulysses',
+        author: 'James Joyce',
+        cover: 'https://m.media-amazon.com/images/I/61yRWyQkxKL._UF1000,1000_QL80_.jpg',
+        quote: 'Stephen!'
+      },
+    ];
+
+    const grid = document.getElementById('grid');
+    const tpl = document.getElementById('card-template');
+
+    books.forEach(b => {
+      const node = tpl.content.cloneNode(true);
+      const card = node.querySelector('.card');
+      const img = node.querySelector('img');
+      const q = node.querySelector('.quote');
+      const t = node.querySelector('.title');
+      const a = node.querySelector('.author');
+
+      img.src = b.cover;
+      img.alt = `${b.title} book cover`;
+      q.innerHTML = `“${b.quote}”`;
+      t.textContent = b.title;
+      a.textContent = b.author;
+      card.setAttribute('aria-label', `Show quote from ${b.title}`);
+
+      card.addEventListener('click', () => toggle(card));
+
+      grid.appendChild(node);
+    });
+
+    function toggle(card){
+      const flipped = card.classList.toggle('is-flipped');
+      card.setAttribute('aria-expanded', flipped);
+    }
+
+    // Ensure only one card flips at a time
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.card');
+      document.querySelectorAll('.card.is-flipped').forEach(c => {
+        if(c !== btn){ 
+          c.classList.remove('is-flipped');
+          c.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }, {capture:true});
+  </script>
