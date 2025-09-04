@@ -40,5 +40,26 @@ figcaption {
   font-style: italic;
   color: #555;            /* gray text */
   margin-top: 0.3em;      /* space between image and caption */
+}
 
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+  row-gap: 2 px;
+  justify-items: center; /* centers figures in their grid cells */
+}
+
+.image-grid figure {
+  text-align: center;
+}
+
+.image-grid img {
+  max-width: 100%;   /* keeps images responsive */
+  height: 300px;
+  width: auto;
+  object-fit: cover;
+}
+
+.image-grid .wide {
+  grid-column: span 2;
 }
