@@ -66,3 +66,7 @@ figcaption {
 .image-grid .wide {
   grid-column: span 2;
 }
+
+.image-grid .single {
+  grid-column: span 3;
+}
