@@ -31,7 +31,6 @@ footer {
 }
 
 figure {
-  text-align: center;     /* center image + caption */
   margin: 1em 0;          /* add spacing */
 }
 
@@ -40,6 +39,8 @@ figcaption {
   font-style: italic;
   color: #555;            /* gray text */
   margin-top: 0.3em;      /* space between image and caption */
+  text-align: center;     /* center image + caption */
+
 }
 
 .image-grid {
