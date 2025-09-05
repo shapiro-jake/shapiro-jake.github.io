@@ -32,6 +32,8 @@ footer {
 
 figure {
   margin: 1em 0;          /* add spacing */
+  text-align: center;     /* center image + caption */
+
 }
 
 figcaption {
